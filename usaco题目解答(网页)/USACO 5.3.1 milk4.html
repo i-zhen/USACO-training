@@ -1,0 +1,87 @@
+<html>
+<head>
+  <title>USACO 5.3.1 milk4</title>
+  <basefont face="Tahoma" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/268868 (zh-CN); Windows/6.1.7601 Service Pack 1;"/>
+  <style>
+    body, td {
+      font-family: Tahoma;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="1717"/>
+<h1>USACO 5.3.1 milk4</h1>
+
+<div>
+<div style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体"><span style="font-size: 13pt;"><b>解题报告</b></span></font> <font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>]</b></span></font></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="宋体" size="4">刚开始看这道题目不是很好分析，感觉暴力搜索的复杂度会很高，这也是USACO的一贯风格。但是本题目就是使用<b>DFS-ID</b>加<b>DP</b>求解即可，首先要选择出要选用的桶的组合，这个可以使用DFS-ID很简单的实现。</font><span style="font-size: 16px;">注意每个层次可以选择的桶的数目的上界，例如如果这次共选Q-1个桶，那么第一个桶只能在1到2之间选择，选第3个会使得本程序的意义失效（think why...）,因此当前层次可以选的上界是<b>p-(edge-lev)</b> 其中p代表桶的总数，edge代表本次要选多少个，lev代表当前已经选到第几个,这样我们就有了一个给定大小的集合的返回函数，定义为<b>S(lev)</b>。</span></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><span style="font-size: 16px;">当找到目前要使用的桶的集合时，就要开始判断可否可行了，首先在DFS-ID的时候，我们的搜索顺序决定了当前集合是满足题目要求的。判断一个容量可否用给定集合组成可以使用完全背包判断。那么每个桶都要被使用至少一次，是否能被正确判断呢？我们假设函数<b>Pa(Ps,S(lev))</b>(Ps表示S的大小)的返回值集合是<b>{true, false}，</b>如果返回值是false表明不可能组成，而返回值是true则相反，同时我们也可以得到附加的信息，首先搜索顺序决定了<b>如果S(lev)可行那么S(lev-1)一定不可行</b>，否则会产生矛盾，这样我们可以加上一个优化，一般完全背包的初始条件是DP[0] = true,但是因为Pa函数的性质，我们可以不理会DP[0]，毕竟每一个桶都至少要使用一次，因此初始条件可以把集合中的第一个桶都提前加上去。状态转移方程<b>DP[i] = DP[i] | DP[i - v[j]];</b></span></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="Arial" style="text-indent: 0mm;"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体" style="text-indent: 0mm;"><span style="font-size: 13pt;"><b>运行情况</b></span></font><span style="text-indent: 0mm;"> </span><font color="#010101" face="Arial" style="text-indent: 0mm;"><span style="font-size: 13pt;"><b>]</b></span></font></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><pre style="text-align: start;">
+Compiling...
+Compile: OK
+
+Executing...
+   Test 1: TEST OK [0.000 secs, 3252 KB]
+   Test 2: TEST OK [0.000 secs, 3252 KB]
+   Test 3: TEST OK [0.000 secs, 3252 KB]
+   Test 4: TEST OK [0.000 secs, 3252 KB]
+   Test 5: TEST OK [0.000 secs, 3252 KB]
+   Test 6: TEST OK [0.000 secs, 3252 KB]
+   Test 7: TEST OK [0.065 secs, 3252 KB]
+   Test 8: TEST OK [0.022 secs, 3252 KB]
+   Test 9: TEST OK [0.000 secs, 3252 KB]
+   Test 10: TEST OK [0.097 secs, 3252 KB]
+
+All tests OK.
+<br><b>YOUR PROGRAM ('milk4') WORKED FIRST TIME!</b>  That's fantastic
+-- and a rare thing.  Please accept these special automated
+congratulations.
+</pre></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><pre style="text-align: start;"></pre></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体"><span style="font-size: 13pt;"><b>程序清单</b></span></font> <font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>]</b></span></font></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><pre style="line-height: 12pt; font-size: 13px; background-color: rgb(255, 255, 236);"><span style="color: rgb(51, 153, 0);">#include &lt;iostream&gt;
+</span><span style="color: rgb(51, 153, 0);">#include &lt;cstring&gt;
+</span><span style="color: rgb(51, 153, 0);">#include &lt;algorithm&gt;
+</span><span style="color: rgb(51, 153, 0);">#include &lt;cstdio&gt;</span>
+ 
+<span style="color: rgb(0, 0, 255);">using</span> <span style="color: rgb(0, 0, 255);">namespace</span> std<span style="color: rgb(0, 128, 128);">;</span>
+ 
+<span style="color: rgb(0, 0, 255);">bool</span> dp<span style="color: rgb(0, 128, 0);">[</span><span style="color: rgb(0, 0, 221);">20001</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 128);">;
+</span><span style="color: rgb(0, 0, 255);">int</span> q, p, buk<span style="color: rgb(0, 128, 0);">[</span><span style="color: rgb(0, 0, 221);">101</span><span style="color: rgb(0, 128, 0);">]</span>, edge, used<span style="color: rgb(0, 128, 0);">[</span><span style="color: rgb(0, 0, 221);">101</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 128);">;</span>
+ 
+<span style="color: rgb(0, 0, 255);">void</span> print<span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> now<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 0);">{</span>
+        <span style="color: rgb(0, 0, 221);">cout</span> <span style="color: rgb(0, 0, 128);">&lt;&lt;</span> now<span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span>  i <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span> i <span style="color: rgb(0, 0, 128);">&lt;=</span> now<span style="color: rgb(0, 128, 128);">;</span> i<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span>
+                <span style="color: rgb(0, 0, 221);">cout</span> <span style="color: rgb(0, 0, 128);">&lt;&lt;</span> <span style="color: rgb(255, 0, 0);">' '</span> <span style="color: rgb(0, 0, 128);">&lt;&lt;</span> buk<span style="color: rgb(0, 128, 0);">[</span>used<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 221);">cout</span> <span style="color: rgb(0, 0, 128);">&lt;&lt;</span> endl<span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 221);">exit</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 221);">0</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;
+</span><span style="color: rgb(0, 128, 0);">}</span>
+ 
+<span style="color: rgb(0, 0, 255);">void</span> judge<span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> now<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 0);">{</span>
+        <span style="color: rgb(0, 0, 221);">memset</span><span style="color: rgb(0, 128, 0);">(</span>dp, <span style="color: rgb(0, 0, 221);">0</span> ,<span style="color: rgb(0, 0, 221);">sizeof</span><span style="color: rgb(0, 128, 0);">(</span>dp<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> i <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span> i <span style="color: rgb(0, 0, 128);">&lt;=</span> q<span style="color: rgb(0, 0, 64);">/</span>buk<span style="color: rgb(0, 128, 0);">[</span>used<span style="color: rgb(0, 128, 0);">[</span><span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 128);">;</span> i<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span>
+                dp<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 0, 64);">*</span>buk<span style="color: rgb(0, 128, 0);">[</span>used<span style="color: rgb(0, 128, 0);">[</span><span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> i <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">2</span><span style="color: rgb(0, 128, 128);">;</span> i <span style="color: rgb(0, 0, 128);">&lt;=</span> now<span style="color: rgb(0, 128, 128);">;</span> i<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span>
+                <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> j <span style="color: rgb(0, 0, 128);">=</span> buk<span style="color: rgb(0, 128, 0);">[</span>used<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 128);">;</span> j <span style="color: rgb(0, 0, 128);">&lt;=</span> q<span style="color: rgb(0, 128, 128);">;</span> j<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span>
+                        dp<span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 64);">|</span><span style="color: rgb(0, 0, 128);">=</span> dp<span style="color: rgb(0, 128, 0);">[</span>j <span style="color: rgb(0, 0, 64);">-</span> buk<span style="color: rgb(0, 128, 0);">[</span>used<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 255);">if</span><span style="color: rgb(0, 128, 0);">(</span>dp<span style="color: rgb(0, 128, 0);">[</span>q<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">)</span> print<span style="color: rgb(0, 128, 0);">(</span>now<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;
+</span><span style="color: rgb(0, 128, 0);">}</span>
+ 
+<span style="color: rgb(0, 0, 255);">void</span> dfs<span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> lev<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 0);">{</span>
+        <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> i <span style="color: rgb(0, 0, 128);">=</span> used<span style="color: rgb(0, 128, 0);">[</span>lev <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 64);">+</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span> i <span style="color: rgb(0, 0, 128);">&lt;=</span> p <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 128, 0);">(</span>edge <span style="color: rgb(0, 0, 64);">-</span> lev<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span> i<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 0);">{</span>
+                used<span style="color: rgb(0, 128, 0);">[</span>lev<span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 128);">=</span> i<span style="color: rgb(0, 128, 128);">;</span>
+                <span style="color: rgb(0, 0, 255);">if</span><span style="color: rgb(0, 128, 0);">(</span>lev <span style="color: rgb(0, 0, 128);">==</span> edge<span style="color: rgb(0, 128, 0);">)</span>
+                        judge<span style="color: rgb(0, 128, 0);">(</span>lev<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+                <span style="color: rgb(0, 0, 255);">else</span>
+                        dfs<span style="color: rgb(0, 128, 0);">(</span>lev <span style="color: rgb(0, 0, 64);">+</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 128, 0);">}
+</span><span style="color: rgb(0, 128, 0);">}</span>
+ 
+<span style="color: rgb(0, 0, 255);">int</span> main<span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 0);">{</span>
+        <span style="color: rgb(0, 0, 221);">freopen</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(255, 0, 0);">&quot;milk4.in&quot;</span>, <span style="color: rgb(255, 0, 0);">&quot;r&quot;</span>, <span style="color: rgb(0, 0, 255);">stdin</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 221);">freopen</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(255, 0, 0);">&quot;milk4.out&quot;</span>, <span style="color: rgb(255, 0, 0);">&quot;w&quot;</span>, <span style="color: rgb(0, 0, 255);">stdout</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 221);">cin</span> <span style="color: rgb(0, 0, 128);">&gt;&gt;</span> q <span style="color: rgb(0, 0, 128);">&gt;&gt;</span> p<span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span>  i <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span> i <span style="color: rgb(0, 0, 128);">&lt;=</span> p<span style="color: rgb(0, 128, 128);">;</span> i<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span> <span style="color: rgb(0, 0, 221);">cin</span> <span style="color: rgb(0, 0, 128);">&gt;&gt;</span> buk<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 128);">;</span>
+        sort<span style="color: rgb(0, 128, 0);">(</span>buk <span style="color: rgb(0, 0, 64);">+</span> <span style="color: rgb(0, 0, 221);">1</span>, buk <span style="color: rgb(0, 0, 64);">+</span> <span style="color: rgb(0, 0, 221);">1</span> <span style="color: rgb(0, 0, 64);">+</span> p<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span>edge <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span> edge <span style="color: rgb(0, 0, 128);">&lt;=</span> p<span style="color: rgb(0, 128, 128);">;</span> edge<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span> <span style="color: rgb(102, 102, 102);">// DFS-ID</span>
+                dfs<span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 255);">return</span> <span style="color: rgb(0, 0, 221);">0</span><span style="color: rgb(0, 128, 128);">;
+</span><span style="color: rgb(0, 128, 0);">}</span></pre></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体"><span style="font-size: 13pt;"><b>注意事项</b></span></font> <font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>]</b></span></font></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="宋体">无。</font></div><div align="justify"><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体"><span style="font-size: 13pt;"><b>难易等级</b></span></font><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>]</b></span></font><font color="#010101" face="Arial" size="2"><span style="font-size: 10pt;"><b> Medium Up(noip the 3rd)</b></span></font></div></div>
+</div></body></html> 

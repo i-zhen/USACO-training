@@ -1,0 +1,77 @@
+<html>
+<head>
+  <title>USACO 5.3.4 bigbrn</title>
+  <basefont face="Tahoma" size="2" />
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <meta name="exporter-version" content="Evernote Windows/268868 (zh-CN); Windows/6.1.7601 Service Pack 1;"/>
+  <style>
+    body, td {
+      font-family: Tahoma;
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+<a name="1826"/>
+<h1>USACO 5.3.4 bigbrn</h1>
+
+<div>
+<div style="word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;"><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体"><span style="font-size: 13pt;"><b>解题报告</b></span></font><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>]</b></span></font></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="宋体" size="4">简单的DP,状态转移方程 <b>DP[i][j] = MIN(DP[i-1][j],DP[i][j-1],DP[i-1][j-1])+1</b>;如果MAP[i-1][j] || MAP[i][j-1] || MAP[i-1][j-1]是树，则DP[i][j]=1.同时刷新最大值即可。</font></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="Arial" style="text-indent: 0mm;"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体" style="text-indent: 0mm;"><span style="font-size: 13pt;"><b>运行情况</b></span></font><font color="#010101" face="Arial" style="text-indent: 0mm;"><span style="font-size: 13pt;"><b>]</b></span></font></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><pre>
+Compiling...
+Compile: OK
+
+Executing...
+   Test 1: TEST OK [0.000 secs, 8160 KB]
+   Test 2: TEST OK [0.000 secs, 8160 KB]
+   Test 3: TEST OK [0.000 secs, 8160 KB]
+   Test 4: TEST OK [0.000 secs, 8160 KB]
+   Test 5: TEST OK [0.000 secs, 8160 KB]
+   Test 6: TEST OK [0.000 secs, 8160 KB]
+   Test 7: TEST OK [0.000 secs, 8160 KB]
+   Test 8: TEST OK [0.000 secs, 8160 KB]
+   Test 9: TEST OK [0.000 secs, 8160 KB]
+   Test 10: TEST OK [0.022 secs, 8160 KB]
+   Test 11: TEST OK [0.032 secs, 8160 KB]
+   Test 12: TEST OK [0.011 secs, 8160 KB]
+   Test 13: TEST OK [0.043 secs, 8160 KB]
+   Test 14: TEST OK [0.022 secs, 8160 KB]
+   Test 15: TEST OK [0.022 secs, 8160 KB]
+
+All tests OK.
+<br>Your program ('bigbrn') produced all correct answers!  This is your
+submission #2 for this problem.  <b>Congratulations!</b></pre></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><pre style="text-align: start;"></pre></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体"><span style="font-size: 13pt;"><b>程序清单</b></span></font><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>]</b></span></font></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><pre style="line-height: 12pt; font-size: 13px; background-color: rgb(255, 255, 236);"></pre><pre style="line-height: 12pt;"><span style="color: rgb(51, 153, 0);">#include &lt;iostream&gt;
+</span><span style="color: rgb(51, 153, 0);">#include &lt;cstring&gt;
+</span><span style="color: rgb(51, 153, 0);">#include &lt;string&gt;
+</span><span style="color: rgb(51, 153, 0);">#include &lt;cstdio&gt;</span>
+ 
+<span style="color: rgb(51, 153, 0);">#define MAX(a, b) (a &gt; b ? a : b)
+</span><span style="color: rgb(51, 153, 0);">#define MIN(a, b) (a &lt; b ? a : b)</span>
+ 
+<span style="color: rgb(0, 0, 255);">using</span> <span style="color: rgb(0, 0, 255);">namespace</span> std<span style="color: rgb(0, 128, 128);">;</span>
+ 
+<span style="color: rgb(0, 0, 255);">bool</span> map<span style="color: rgb(0, 128, 0);">[</span><span style="color: rgb(0, 0, 221);">1005</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span><span style="color: rgb(0, 0, 221);">1005</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 128);">;
+</span><span style="color: rgb(0, 0, 255);">int</span> n, m, dp<span style="color: rgb(0, 128, 0);">[</span><span style="color: rgb(0, 0, 221);">1005</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span><span style="color: rgb(0, 0, 221);">1005</span><span style="color: rgb(0, 128, 0);">]</span>, ans<span style="color: rgb(0, 128, 128);">;</span>
+ 
+<span style="color: rgb(0, 0, 255);">int</span> main<span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 0);">{</span>
+        <span style="color: rgb(0, 0, 221);">freopen</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(255, 0, 0);">&quot;bigbrn.in&quot;</span>, <span style="color: rgb(255, 0, 0);">&quot;r&quot;</span>, <span style="color: rgb(0, 0, 255);">stdin</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 221);">freopen</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(255, 0, 0);">&quot;bigbrn.out&quot;</span>, <span style="color: rgb(255, 0, 0);">&quot;w&quot;</span>, <span style="color: rgb(0, 0, 255);">stdout</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 221);">scanf</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(255, 0, 0);">&quot;%d%d&quot;</span>, <span style="color: rgb(0, 0, 64);">&amp;</span>n, <span style="color: rgb(0, 0, 64);">&amp;</span>m<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> i <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span> i <span style="color: rgb(0, 0, 128);">&lt;=</span> m<span style="color: rgb(0, 128, 128);">;</span> i<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 0);">{</span>
+                <span style="color: rgb(0, 0, 255);">int</span> a, b<span style="color: rgb(0, 128, 128);">;</span>
+                <span style="color: rgb(0, 0, 221);">scanf</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(255, 0, 0);">&quot;%d%d&quot;</span>, <span style="color: rgb(0, 0, 64);">&amp;</span>a, <span style="color: rgb(0, 0, 64);">&amp;</span>b<span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+                map<span style="color: rgb(0, 128, 0);">[</span>a<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>b<span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 128, 0);">}</span>
+        <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> i <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span> i <span style="color: rgb(0, 0, 128);">&lt;=</span> n<span style="color: rgb(0, 128, 128);">;</span> i<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span>
+                <span style="color: rgb(0, 0, 255);">for</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 255);">int</span> j <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span> j <span style="color: rgb(0, 0, 128);">&lt;=</span> n<span style="color: rgb(0, 128, 128);">;</span> j<span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 0);">)</span>
+                        <span style="color: rgb(0, 0, 255);">if</span><span style="color: rgb(0, 128, 0);">(</span><span style="color: rgb(0, 0, 64);">!</span>map<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 0);">{</span>
+                                <span style="color: rgb(0, 0, 255);">if</span><span style="color: rgb(0, 128, 0);">(</span>map<span style="color: rgb(0, 128, 0);">[</span>i <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 64);">||</span> map<span style="color: rgb(0, 128, 0);">[</span>i <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 64);">||</span> map<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">)</span> dp<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 128);">=</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 128);">;</span>
+                                <span style="color: rgb(0, 0, 255);">else</span><span style="color: rgb(0, 128, 0);">{</span>
+                                        dp<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 128);">=</span> MIN<span style="color: rgb(0, 128, 0);">(</span>dp<span style="color: rgb(0, 128, 0);">[</span>i <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span>, dp<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+                                        dp<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span> <span style="color: rgb(0, 0, 128);">=</span> MIN<span style="color: rgb(0, 128, 0);">(</span>dp<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span>, dp<span style="color: rgb(0, 128, 0);">[</span>i <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j <span style="color: rgb(0, 0, 64);">-</span> <span style="color: rgb(0, 0, 221);">1</span><span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+                                        dp<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 0, 64);">++</span><span style="color: rgb(0, 128, 128);">;</span>
+                                <span style="color: rgb(0, 128, 0);">}</span>
+                                ans <span style="color: rgb(0, 0, 128);">=</span> MAX<span style="color: rgb(0, 128, 0);">(</span>ans, dp<span style="color: rgb(0, 128, 0);">[</span>i<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">[</span>j<span style="color: rgb(0, 128, 0);">]</span><span style="color: rgb(0, 128, 0);">)</span><span style="color: rgb(0, 128, 128);">;</span>
+                        <span style="color: rgb(0, 128, 0);">}</span>
+        <span style="color: rgb(0, 0, 221);">cout</span> <span style="color: rgb(0, 0, 128);">&lt;&lt;</span> ans <span style="color: rgb(0, 0, 128);">&lt;&lt;</span> endl<span style="color: rgb(0, 128, 128);">;</span>
+        <span style="color: rgb(0, 0, 255);">return</span> <span style="color: rgb(0, 0, 221);">0</span><span style="color: rgb(0, 128, 128);">;</span></pre><pre style="line-height: 12pt;"><span style="color: rgb(0, 128, 128);">}</span></pre></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体"><span style="font-size: 13pt;"><b>注意事项</b></span></font><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>]</b></span></font></div><div align="left" style="text-indent: 0mm; margin: 4.75mm 0mm;"><font color="#010101" face="宋体">第一次提交，最大值刷新的位置写错地方了。</font></div><div align="justify"><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>[</b></span></font><font color="#010101" face="宋体"><span style="font-size: 13pt;"><b>难易等级</b></span></font><font color="#010101" face="Arial"><span style="font-size: 13pt;"><b>]</b></span></font><font color="#010101" face="Arial" size="2"><span style="font-size: 10pt;"><b> Easy Up(noip the 2nd)</b></span></font></div></div>
+</div></body></html> 
