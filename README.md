@@ -3,13 +3,14 @@ USACO-training source/slove/summary
 ##当前版本 V0.6
 
 * 适用人群与使用注意事项：
-    * 已经完成USACO training的人群
+    * **已经完成**USACO training的人群
     * 不建议把本套题解当作参考答案
+    * 不可以私自传播/转载
 
 * 本文件包包括：
     * 题目解答网页版(通过 USACO题目解答_index.html 查找)
     * 中文题目与题目解答
-    * 源代码
+    * 源代码(全部C++/部分同时包括Pascal)
     * 章末总结
     * 原创资料
     * 经验总结
@@ -21,4 +22,4 @@ USACO-training source/slove/summary
     * v0.8 当前的内容完善 阶段2
     * v1.0 题目分类讨论与总结
 
-版权所有，转载请说明出处(by Z.Y.) 
+版权所有，转载请先与本人协商(by Z.Y.)
