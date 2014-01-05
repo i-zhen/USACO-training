@@ -1,7 +1,5 @@
-usaco-training
+USACO training 所有题目源码、解答、总结
 ==============
-
-##USACO training 所有题目源码、解答、总结
 
 * 适用人群：
     * 已经完成USACO training的人群
